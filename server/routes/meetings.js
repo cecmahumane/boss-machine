@@ -19,18 +19,19 @@ meetingsRouter.get('/', (req, res, next) => {
     res.json(arr);
 })
 
-// Create an idea
+// Create a meeting
 meetingsRouter.post('/', (req, res, next) => {
-  // console.log(createMeeting())
-  if (createMeeting()) {
-    res.status(201).send(createMeeting());
+  let meeting = createMeeting();
+  let instance = addToDatabase('meetings', meeting)
+  if (instance) {
+    res.status(201).send(instance);
   } else {
     res.status(404).send()
   }
   
 })
 
-// Delete an idea
+// Delete meetings
 meetingsRouter.delete('/', (req, res, next) => {
   let arr = deleteAllFromDatabase('meetings');
   if(arr) {  
