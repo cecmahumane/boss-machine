@@ -38,35 +38,25 @@ workRouter.post('/:minionId/work', (req, res, next) => {
     }
 })
 
-// // Get a single minions work
-// minionsRouter.get('/:minionId/work', (req, res, next) => {
-//     let instance = getFromDatabaseById('work', req.params.minionId);
-//     if (instance) {
-//         res.send(instance);
-//     } else {
-//         res.status(404).send();
-//     }
-// })
-
 // Update work
 workRouter.put('/:minionId/work/:workId', (req, res, next) => {
-    //1) get the work obj
-    //2) get the minion id param from the route
-    //3) check if minion id in work obj match minion id in the route if not throw 400
     let instance = getFromDatabaseById('minions', req.params.minionId);
     if (Number(req.params.minionId) && Number(req.params.workId) && Number(req.params.workId) > 0 && instance) {
-        // console.log(req.body);
-        let instance = updateInstanceInDatabase('work', req.body);
-        if (instance) {
-            // console.log(instance)
-            res.send(instance);
+        if (req.body.id === req.params.workId) {
+            // console.log(req.body);
+            let instance = updateInstanceInDatabase('work', req.body);
+            if (instance) {
+                // console.log(instance)
+                res.send(instance);
+            } else {
+                res.status(404).send();
+            }
         } else {
-            res.status(404).send();
+            res.status(400).send()
         }
     } else {
         res.status(404).send(); 
     }
-   
 })
 
 // Delete a minion
