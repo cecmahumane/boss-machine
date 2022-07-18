@@ -61,7 +61,7 @@ workRouter.put('/:minionId/work/:workId', (req, res, next) => {
 
 // Delete a minion
 minionsRouter.delete('/:minionId/work/:workId', (req, res, next) => {
-    console.log(req.params)
+    // console.log(req.params)
     let minionId = req.params.minionId;
     let workId = req.params.workId;
     if (Number(minionId) && Number(workId) && minionId > 0) {

@@ -22,12 +22,9 @@ ideasRouter.get('/', (req, res, next) => {
 })
 
 // Create an idea
-ideasRouter.post('/', (req, res, next) => {
-  // console.log(req.body)
+ideasRouter.post('/', checkMillionDollarIdea, (req, res, next) => {
   if (Object.keys(req.body).length > 0) {
-    checkMillionDollarIdea(req, res, next);
       let instance = addToDatabase('ideas', req.body);
-      // console.log(instance)
       res.status(201).send(instance);
   } else {
       res.status(400).send();
@@ -46,10 +43,8 @@ ideasRouter.get('/:ideaId', (req, res, next) => {
 
 // Update an idea
 ideasRouter.put('/:ideaId', (req, res, next) => {
-  // checkMillionDollarIdea(req, res, next)
   let instance = updateInstanceInDatabase('ideas', req.body);
   if (instance) {
-      // console.log(instance)
       res.send(instance);
   } else {
       res.status(404).send();
