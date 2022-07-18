@@ -3,20 +3,25 @@ const express = require('express');
 workRouter = express.Router();
 
 const {
-    createMeeting,
     getAllFromDatabase,
     getFromDatabaseById,
     addToDatabase,
     updateInstanceInDatabase,
     deleteFromDatabasebyId,
-    deleteAllFromDatabase,
   } = require('../db')
 
 // Get all work
 workRouter.get('/:minionId/work', (req, res, next) => {
-    if (Number(req.params.minionId)) {
-        let arr = getAllFromDatabase('work');
-        res.send(arr);
+    let instance = getFromDatabaseById('minions', req.params.minionId);
+    if (Number(req.params.minionId) && instance) {
+        let data = getAllFromDatabase('work');
+        // console.log(arr) filter down and return as an array
+        let minionWork = data.filter((work) => {
+            return work.minionId === req.params.minionId
+        }) 
+        res.send(minionWork);
+    } else {
+        res.status(404).send()
     }
 
 })
@@ -33,19 +38,24 @@ workRouter.post('/:minionId/work', (req, res, next) => {
     }
 })
 
-// Get a single minions work
-minionsRouter.get('/:minionId/work', (req, res, next) => {
-    let instance = getFromDatabaseById('work', req.params.minionId);
-    if (instance) {
-        res.send(instance);
-    } else {
-        res.status(404).send();
-    }
-})
+// // Get a single minions work
+// minionsRouter.get('/:minionId/work', (req, res, next) => {
+//     let instance = getFromDatabaseById('work', req.params.minionId);
+//     if (instance) {
+//         res.send(instance);
+//     } else {
+//         res.status(404).send();
+//     }
+// })
 
 // Update work
 workRouter.put('/:minionId/work/:workId', (req, res, next) => {
-    if (Number(req.params.minionId) && Number(req.params.workId) && Number(req.params.workId) > 0) {
+    //1) get the work obj
+    //2) get the minion id param from the route
+    //3) check if minion id in work obj match minion id in the route if not throw 400
+    let instance = getFromDatabaseById('minions', req.params.minionId);
+    if (Number(req.params.minionId) && Number(req.params.workId) && Number(req.params.workId) > 0 && instance) {
+        // console.log(req.body);
         let instance = updateInstanceInDatabase('work', req.body);
         if (instance) {
             // console.log(instance)
